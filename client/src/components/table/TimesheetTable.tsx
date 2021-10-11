@@ -5,6 +5,7 @@ import {
 import axios from 'axios';
 import { TableHeader } from './table-header/TableHeader';
 import { TableBody } from './table-body/TableBody';
+import { ApiResponse, Timesheet } from '../../types';
 
 const API_URL = 'http://localhost:5000/api/timesheets';
 
@@ -28,13 +29,12 @@ export const TimesheetTable = () => {
     const { data } = await axios.post(API_URL, timesheet);
     return data;
   }
-  const timesheetsQuery = useQuery('timesheets', getTimesheets);
+  const timesheetsQuery = useQuery<ApiResponse<Timesheet[]>, Error>('timesheets', getTimesheets);
   const timesheetsMutation = useMutation('timesheets', createTimesheet);
   return (
     <>
       <TableHeader />
-      <TableBody />
-      <button onClick={() => timesheetsMutation.mutate() }>Click</button>
+      <TableBody timesheetsQuery={timesheetsQuery} />
     </>
   )
 }
