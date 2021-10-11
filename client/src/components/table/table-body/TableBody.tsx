@@ -6,24 +6,62 @@ import { ApiResponse, Timesheet } from '../../../types';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './styles.scss';
+import { BillableHoursCellRenderer } from '../../billable-hours-cell-renderer/BillableHoursCellRenderer';
+
+const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD'})
 
 export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult<ApiResponse<Timesheet[]>, Error> }) => {
   const { data: apiData, isLoading} = timesheetsQuery;
+
+  const frameworkComponents = {
+    'billableHoursCellRenderer': BillableHoursCellRenderer,
+  };
+
   const defaultColDef: ColDef = useMemo(() => ({
     sortable: true,
     resizable: true,
     filter: true,
   }), []);
   const columnDefs: ColDef[] = useMemo(() => [
-    { headerName: 'Date', field: 'date' },
-    { headerName: 'Client', field: 'client' },
-    { headerName: 'Project', field: 'project' },
-    { headerName: 'Project Code', field: 'projectCode' },
-    { headerName: 'Hours', field: 'hours' },
-    { headerName: 'Billable?', field: 'isBillable', valueGetter: params => params.data.isBillable ? 'Y' : 'N' },
-    { headerName: 'First Name', field: 'firstName' },
-    { headerName: 'Last Name', field: 'lastName' },
-    { headerName: 'Billable Rate', field: 'billableRate' },
+    {
+      headerName: 'Name',
+      field: 'project',
+      cellClass: 'blue-text',
+    },
+    {
+      headerName:'Client',
+      field: 'client',
+      cellClass: 'blue-text',
+    },
+    {
+      headerName: 'Hours',
+      field: 'hours',
+      cellClass: 'blue-text',
+      type: 'rightAligned',
+      valueGetter: params => {
+        return params.data.hours.toFixed(2);
+      },
+      cellStyle: { textAlign: 'right' },
+    },
+    {
+      headerName:'Billable Hours',
+      cellRenderer: 'billableHoursCellRenderer',
+      type: 'rightAligned',
+      valueGetter: params => {
+        return params.data.hours.toFixed(2);
+      },
+    },
+    {
+      headerName: 'Billable Amount',
+      type: 'rightAligned',
+      width: 180,
+      valueGetter: params => {
+        const { isBillable, hours, billableRate } = params.data;
+        return isBillable
+          ? formatter.format(billableRate * hours)
+          : '-';
+      }
+    },
   ], []);
 
   if (isLoading || !apiData?.data) {
@@ -36,6 +74,7 @@ export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult
         className="ag-theme-alpine"
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
+        frameworkComponents={frameworkComponents}
         rowData={apiData.data}>
       </AgGridReact>
     </div>
