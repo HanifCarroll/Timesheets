@@ -1,0 +1,14 @@
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  margin: 50px 0;
+}
+
+.table-header-item-title {
+  color: grey;
+}
+
+.table-header-item-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+}

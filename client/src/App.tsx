@@ -10,9 +10,11 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TimesheetTable />
-    </QueryClientProvider>
+    <div className='container'>
+      <QueryClientProvider client={queryClient}>
+        <TimesheetTable />
+      </QueryClientProvider>
+    </div>
   );
 }
 

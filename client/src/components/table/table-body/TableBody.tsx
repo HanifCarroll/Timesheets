@@ -7,8 +7,8 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './styles.scss';
 import { BillableHoursCellRenderer } from '../../billable-hours-cell-renderer/BillableHoursCellRenderer';
+import { dollarFormatter } from '../../../utils/utils';
 
-const formatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD'})
 
 export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult<ApiResponse<Timesheet[]>, Error> }) => {
   const { data: apiData, isLoading} = timesheetsQuery;
@@ -58,7 +58,7 @@ export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult
       valueGetter: params => {
         const { isBillable, hours, billableRate } = params.data;
         return isBillable
-          ? formatter.format(billableRate * hours)
+          ? dollarFormatter.format(billableRate * hours)
           : '-';
       }
     },

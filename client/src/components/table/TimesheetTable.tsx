@@ -33,7 +33,7 @@ export const TimesheetTable = () => {
   const timesheetsMutation = useMutation('timesheets', createTimesheet);
   return (
     <>
-      <TableHeader />
+      <TableHeader timesheetsQuery={timesheetsQuery}/>
       <TableBody timesheetsQuery={timesheetsQuery} />
     </>
   )
