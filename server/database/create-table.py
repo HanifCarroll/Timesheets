@@ -1,6 +1,6 @@
 import csv, sqlite3
 
-db_path = './timesheets.db'
+db_path = './server/database/timesheets.db'
 conn = sqlite3.connect(db_path)
 c = conn.cursor()
 
@@ -20,11 +20,11 @@ c.execute("""CREATE TABLE IF NOT EXISTS timesheet (
 )
 """)
 
-with open('timesheets-data.csv', 'r') as data:
+with open('./server/database/timesheets-data.csv', 'r') as data:
     dr = csv.DictReader(data)
     to_db = [(row['Date'], row['Client'], row['Project'],
-        row['Project Code'], row['Hours'], row['Billable?'],
-        row['First Name'], row['Last Name'], row['Billable Rate']) for row in dr]
+        row['Project Code'], row['Hours'], True if row['Billable?'] == 'Yes' else False,
+        row['First Name'], row['Last Name'], row['Billable Rate']) for row in dr if row['Date'] is not '']
 
 c.executemany("""INSERT INTO timesheet (date, client, project, project_code,
     hours, is_billable, first_name, last_name, billable_rate) VALUES 
