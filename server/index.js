@@ -1,19 +1,21 @@
 const express = require('express');
 const asyncify = require('express-asyncify');
 const sequelize = require('./database/sequelize');
+const cors = require('cors');
 const { ValidationError } = require("sequelize");
 
 
 const app = asyncify(express());
-const port = 3000;
+const port = 5000;
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/api/timesheets', async (req, res) => {
   try {
     const timesheets = await sequelize.models.Timesheet.findAll();
 
-    res.status(200).json(timesheets);
+    res.status(200).json({ data: timesheets });
   } catch (error) {
     res.status(500).json({ error: 'Something went wrong.' });
   }
@@ -29,7 +31,7 @@ app.post('/api/timesheets', async (req, res) => {
     };
     const timesheet = await sequelize.models.Timesheet.create(timesheetDto);
 
-    res.status(201).json(timesheet);
+    res.status(201).json({ data: timesheet });
   } catch (error) {
     if (error instanceof ValidationError) {
       res.status(400).json({ error: `${error.errors[0].path} is invalid.` });
