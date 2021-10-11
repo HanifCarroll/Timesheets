@@ -9,6 +9,7 @@ sequelize.define('Timesheet', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
+    autoIncrement: true,
   },
   date: {
     type: DataTypes.DATEONLY,
@@ -52,17 +53,18 @@ sequelize.define('Timesheet', {
     field: 'billable_rate',
   },
   createdAt: {
-    type: DataTypes.STRING,
+    type: DataTypes.DATE,
     allowNull: false,
     field: 'created_at',
   },
   updatedAt: {
-    type: DataTypes.STRING,
+    type: DataTypes.DATE,
     allowNull: true,
     field: 'updated_at',
   }
 }, {
-  tableName: 'timesheet'
+  tableName: 'timesheet',
+  timestamps: false,
 });
 
 module.exports = sequelize;

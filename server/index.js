@@ -18,8 +18,12 @@ app.get('/api/timesheets', async (req, res) => {
 });
 
 app.post('/api/timesheets', async (req, res) => {
-  await sequelize.models.Timesheet.create(res.body);
-  res.status(200).json(timesheets);
+  const timesheetDto = { ...req.body };
+  timesheetDto.date = new Date(timesheetDto.date)
+  timesheetDto.createdAt = Date.now();
+  timesheetDto.updatedAt = null;
+  const timesheet = await sequelize.models.Timesheet.create(timesheetDto);
+  res.status(201).json(timesheet);
 });
 
 app.listen(port, () => {
