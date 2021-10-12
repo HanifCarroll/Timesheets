@@ -29,10 +29,9 @@ app.post('/api/timesheets', async (req, res) => {
       createdAt: Date.now(),
       updatedAt: null,
     };
-    await sequelize.models.Timesheet.create(timesheetDto);
-    const timesheets = await sequelize.models.Timesheet.findAll();
+    const timesheet = await sequelize.models.Timesheet.create(timesheetDto);
 
-    res.status(201).json({ data: timesheets });
+    res.status(201).json({ data: timesheet });
   } catch (error) {
     if (error instanceof ValidationError) {
       res.status(400).json({ error: `${error.errors[0].path} is invalid.` });

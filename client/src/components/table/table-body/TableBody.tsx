@@ -54,7 +54,6 @@ export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult
     {
       headerName: 'Billable Amount',
       type: 'rightAligned',
-      cellClass: 'billable-amount',
       width: 180,
       valueGetter: params => {
         const { isBillable, hours, billableRate } = params.data;
