@@ -2,21 +2,20 @@ import { useMemo } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { UseQueryResult } from 'react-query';
-import { ApiResponse, Timesheet } from '../../../types';
+import { Timesheet } from '../../../types';
+import { BillableHoursCellRenderer } from '../../billable-hours-cell-renderer/BillableHoursCellRenderer';
+import { dollarFormatter } from '../../../utils/utils';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import './styles.scss';
-import { BillableHoursCellRenderer } from '../../billable-hours-cell-renderer/BillableHoursCellRenderer';
-import { dollarFormatter } from '../../../utils/utils';
 
 
-export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult<ApiResponse<Timesheet[]>, Error> }) => {
-  const { data: apiData, isLoading} = timesheetsQuery;
+export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult<Timesheet[], Error> }) => {
+  const { data: timesheets, isLoading, isLoadingError } = timesheetsQuery;
 
   const frameworkComponents = {
     'billableHoursCellRenderer': BillableHoursCellRenderer,
   };
-
   const defaultColDef: ColDef = useMemo(() => ({
     sortable: true,
     resizable: true,
@@ -38,18 +37,13 @@ export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult
       field: 'hours',
       cellClass: 'blue-text',
       type: 'rightAligned',
-      valueGetter: params => {
-        return params.data.hours.toFixed(2);
-      },
+      valueGetter: params => params.data.hours.toFixed(2),
       cellStyle: { textAlign: 'right' },
     },
     {
       headerName:'Billable Hours',
       cellRenderer: 'billableHoursCellRenderer',
       type: 'rightAligned',
-      valueGetter: params => {
-        return params.data.hours.toFixed(2);
-      },
     },
     {
       headerName: 'Billable Amount',
@@ -64,8 +58,12 @@ export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult
     },
   ], []);
 
-  if (isLoading || !apiData?.data) {
+  if (isLoading) {
     return <h2>Loading...</h2>
+  }
+
+  if (isLoadingError) {
+    return <h2>An error occurred.</h2>
   }
 
   return (
@@ -75,7 +73,7 @@ export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
         frameworkComponents={frameworkComponents}
-        rowData={apiData.data}>
+        rowData={timesheets}>
       </AgGridReact>
     </div>
   );

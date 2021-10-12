@@ -1,5 +1,6 @@
 import { ICellRendererParams } from 'ag-grid-community';
 
+
 export const BillableHoursCellRenderer = (props: ICellRendererParams) => {
   const { data } = props;
   let hours = 0;
@@ -8,10 +9,11 @@ export const BillableHoursCellRenderer = (props: ICellRendererParams) => {
     hours = data.hours;
     percentage = 100;
   }
+
   return (
-    <span>
+    <>
       <span className='billable-hours'>{ hours.toFixed(2) }</span>
       <span className='billable-percentage'> ({ percentage }%)</span>
-    </span>
+    </>
   );
 }
