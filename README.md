@@ -16,13 +16,13 @@ Inside of the project folder, run `setup.bat`. This will run `npm install` for b
 
 The next step is to start the API on port 5000.
 
-Open a shell of your choice (command prompt, git bash, etc), enter the command`cd server`, then `npm run start`.
+Open a shell of your choice (command prompt, git bash, etc) at the root directory for the project, enter the command`cd server`, then `npm run start`.
 
 Now it's time to start the React application on port 3000.
 
-In a new shell, enter the comamand `cd client`, then `npm run start`.
+In a new shell located at the root directory for the project, enter the comamand `cd client`, then `npm run start`.
 
-Finally, navigate to http://localhost:3000 in your browser, and you should see the table populated with data.
+Finally, navigate to http://localhost:3000 in your browser, and table should be visible and populated with data.
 
 ## Key Technologies
 - React (with TypeScript)
