@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { AgGridReact } from 'ag-grid-react';
+import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import { ColDef } from 'ag-grid-community';
 import { UseQueryResult } from 'react-query';
 import { Timesheet } from '../../../types';
@@ -16,11 +16,13 @@ export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult
   const frameworkComponents = {
     'billableHoursCellRenderer': BillableHoursCellRenderer,
   };
+
   const defaultColDef: ColDef = useMemo(() => ({
     sortable: true,
     resizable: true,
     filter: true,
   }), []);
+
   const columnDefs: ColDef[] = useMemo(() => [
     {
       headerName: 'Name',
@@ -58,6 +60,10 @@ export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult
     },
   ], []);
 
+  const onFirstDataRendered = (params: AgGridReactProps) => {
+    params.api?.sizeColumnsToFit();
+  }
+
   if (isLoading) {
     return <h2>Loading...</h2>
   }
@@ -66,6 +72,7 @@ export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult
     return <h2>An error occurred.</h2>
   }
 
+
   return (
     <div className="grid">
       <AgGridReact
@@ -73,6 +80,7 @@ export const TableBody = ({ timesheetsQuery }: { timesheetsQuery: UseQueryResult
         columnDefs={columnDefs}
         defaultColDef={defaultColDef}
         frameworkComponents={frameworkComponents}
+        onFirstDataRendered={onFirstDataRendered}
         rowData={timesheets}>
       </AgGridReact>
     </div>
